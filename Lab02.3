@@ -1,0 +1,120 @@
+main.cpp
+
+#include <iostream>
+#include"dynArr2D.h"
+using namespace std;
+
+int main()
+{
+   int row,column,n;
+    cout<<"Enter row size: "<<endl;
+    cin>>row;
+
+ cout<<"Enter column size: "<<endl;
+    cin>>column;
+    dynArr2D d1(row,column);
+    cout<<"Enter the value of the 2D array: "<<endl;
+    for(int i=0;i<row;i++)
+    {
+        for(int j=0;j<column;j++)
+        {
+            cin>>n;
+            d1.setValue(i,j,n);
+        }
+    }
+    cout<<"Print the value of the 2D array: "<<endl;
+    for(int i=0;i<row;i++)
+    {
+        for(int j=0;j<column;j++)
+        {
+
+            cout<<d1.getValue(i,j)<<" ";
+        }
+        cout<<endl;
+    }
+
+    return 0;
+}
+
+
+
+.h file
+
+
+
+#ifndef DYNARR2D_H
+#define DYNARR2D_H
+
+
+class dynArr2D
+{
+    private:
+    int **data;
+    int row;
+    int column;
+
+public:
+    dynArr2D();
+    dynArr2D(int,int);
+    ~dynArr2D();
+    void setValue(int, int,int);
+    int getValue(int,int);
+    void allocate(int,int);
+};
+
+#endif // DYNARR2D_H
+
+
+
+
+.cpp file
+
+
+#include"dynArr2D.h"
+#include <iostream>
+
+using namespace std;
+
+dynArr2D::dynArr2D()
+{
+    data = NULL;
+    row=column=0;
+}
+dynArr2D::dynArr2D(int row,int column)
+{
+   this->row=row;
+   this->column=column;
+   data=new int*[row];
+   for(int i=0;i<row;i++)
+   {
+       data[i]=new int[column];
+   }
+}
+dynArr2D::~dynArr2D()
+{
+    for(int i=0;i<row;i++)
+   {
+       delete []data[i];
+   }
+    delete [] data;
+}
+int dynArr2D::getValue(int index1,int index2)
+{
+    return data[index1][index2];
+}
+void dynArr2D::setValue(int index1,int index2, int value)
+{
+    data[index1][index2]= value;
+}
+void dynArr2D::allocate(int row,int column)
+{
+    this->row=row;
+    this->column=column;
+    this->~dynArr2D();
+    data=new int*[row];
+    for(int i=0;i,row;i++)
+    {
+        data[i]=new int[column];
+    }
+
+}
