@@ -1,0 +1,204 @@
+#include <iostream>
+#include"SortedListType.cpp"
+using namespace std;
+
+int main()
+{
+    SortedListType<int> S;
+
+    cout<<"The length of the list is "<<S.LengthIs()<<endl;
+    S.InsertItem(5);
+    S.InsertItem(7);
+    S.InsertItem(4);
+    S.InsertItem(2);
+    S.InsertItem(1);
+    S.Print();
+    int item=6;
+    bool found;
+    S.RetrieveItem(item,found);
+    if(found)
+        cout<<"Item is found"<<endl;
+    else
+        cout<<"Item is not found"<<endl;
+    item=5;
+    S.RetrieveItem(item,found);
+    if(found)
+        cout<<"Item is found"<<endl;
+    else
+        cout<<"Item is not found"<<endl;
+    if(S.IsFull())
+        cout<<"List is full"<<endl;
+    else
+        cout<<"List is not full"<<endl;
+    S.DeleteItem(1);
+    cout<<"Items in the list are "<<endl;
+    for(int i=0; i<S.LengthIs(); i++)
+    {
+        int temp;
+        S.GetNextItem(temp);
+        cout<<temp<<" ";
+    }
+    cout<<endl;
+    S.ResetList();
+    if(S.IsFull())
+        cout<<"List is full"<<endl;
+    else
+        cout<<"List is not full"<<endl;
+    return 0;
+}
+
+
+
+.h file
+
+
+#define SORTEDLISTTYPE_H
+const int MAX_ITEMS = 5;
+template <class ItemType>
+class SortedListType
+{
+public :
+    SortedListType();
+    ~SortedListType();
+    void MakeEmpty();
+    bool IsFull();
+    int LengthIs();
+    void InsertItem(ItemType);
+    void DeleteItem(ItemType);
+    void RetrieveItem(ItemType&,
+                      bool&);
+    void ResetList();
+    void GetNextItem(ItemType&);
+    void Print();
+private:
+    int length;
+    ItemType info[MAX_ITEMS];
+    int currentPos;
+};
+#endif // SORTEDLISTTYPE_H
+
+
+
+//cpp file
+
+
+#include "SortedListType.h"
+#include <iostream>
+using namespace std;
+template <class ItemType>
+SortedListType<ItemType>::SortedListType()
+{
+//ctor
+    length = 0;
+    currentPos = -1;
+}
+template <class ItemType>
+SortedListType<ItemType>::~SortedListType()
+{
+//dtor
+}
+template <class ItemType>
+void SortedListType<ItemType>::MakeEmpty()
+{
+    length = 0;
+    currentPos = -1;
+}
+template <class ItemType>
+bool SortedListType<ItemType>::IsFull()
+{
+    return (length==MAX_ITEMS);
+}
+template <class ItemType>
+int SortedListType<ItemType>::LengthIs()
+{
+    return length;
+}
+template <class ItemType>
+void SortedListType<ItemType>::ResetList()
+{
+    currentPos = -1;
+}
+template <class ItemType>
+void
+SortedListType<ItemType>::GetNextItem(ItemType&
+                                      item)
+{
+    currentPos++;
+    item = info[currentPos];
+}
+template <class ItemType>
+void
+SortedListType<ItemType>::InsertItem(ItemType
+                                     item)
+{
+    int location, index;
+    if (length>=MAX_ITEMS)
+        return;
+    location = 0;
+    while (location<length &&
+            info[location]<item)
+    {
+        location++;
+    }
+    if (info[location]==item)
+        return;
+    for (index=length; index>location; index--)
+    {
+        info[index] = info[index-1];
+    }
+    info[location] = item;
+    length++;
+    return;
+}
+template <class ItemType>
+void
+SortedListType<ItemType>::DeleteItem(ItemType
+                                     item)
+{
+    int location = 0, index;
+    while (location<length &&
+            info[location]<item)
+    {
+        location++;
+    }
+    if (info[location]==item)
+    {
+        for (index=location; index<length-1;
+                index++)
+        {
+            info[index] = info[index+1];
+        }
+        length--;
+    }
+}
+template <class ItemType>
+void
+SortedListType<ItemType>::RetrieveItem(ItemType&
+                                       item, bool& found)
+{
+    int mid, first = 0, last = length-1;
+    while (first<=last)
+    {
+        mid = (first+last)/2;
+        if (info[mid]==item)
+        {
+            found = true;
+            return;
+        }
+        if (info[mid]<item)
+            first = mid + 1;
+        else
+            last = mid - 1;
+    }
+    found = false;
+}
+template <class ItemType>
+void SortedListType<ItemType>::Print()
+{
+    cout << "The items are: ";
+    for (int i=0; i<length; i++)
+    {
+        cout << info[i] << " ";
+    }
+    cout << endl;
+}
